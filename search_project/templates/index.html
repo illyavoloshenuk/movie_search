@@ -28,6 +28,7 @@
                 <label for="genre_id">Select Genre:</label>
                 <select name="genre_id" id="genre_id" class="form-control" required>
                     <option value="">-- Choose a genre --</option>
+                    <option value="0">All Genres</option>
                     {% for genre in genres %}
                         <option value="{{ genre.category_id }}">{{ genre.name }}</option>
                     {% endfor %}
