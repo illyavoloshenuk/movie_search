@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Movie Search{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h2>Search Your Favorite Movies</h2>
+    <p>Find movies by title, genre, or year range</p>
+</div>
+
+<div class="search-sections">
+    <div class="search-box">
+        <h3>🔍 Search by Keyword</h3>
+        <form action="{{ url_for('search') }}" method="get" class="search-form">
+            <input type="hidden" name="type" value="keyword">
+            <div class="form-group">
+                <input type="text" name="keyword" placeholder="Enter movie title..." class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+    </div>
+
+    <div class="search-box">
+        <h3>🎭 Search by Genre & Year</h3>
+        <form action="{{ url_for('search') }}" method="get" class="search-form">
+            <input type="hidden" name="type" value="genre_year">
+            <div class="form-group">
+                <label for="genre_id">Select Genre:</label>
+                <select name="genre_id" id="genre_id" class="form-control" required>
+                    <option value="">-- Choose a genre --</option>
+                    {% for genre in genres %}
+                        <option value="{{ genre.category_id }}">{{ genre.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="start_year">From Year:</label>
+                    <input type="number" name="start_year" id="start_year" min="{{ min_year }}" max="{{ max_year }}" value="{{ min_year }}" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="end_year">To Year:</label>
+                    <input type="number" name="end_year" id="end_year" min="{{ min_year }}" max="{{ max_year }}" value="{{ max_year }}" class="form-control" required>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-secondary">Search by Genre</button>
+        </form>
+    </div>
+</div>
+
+{% if stats and (stats.popular or stats.recent) %}
+<div class="stats-preview">
+    <h3>📊 Search Statistics</h3>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h4>Popular Queries</h4>
+            <ul>
+                {% for item in stats.popular[:3] %}
+                    <li>
+                        <strong>{{ item._id.search_type }}</strong>:
+                        {{ item._id.params|tojson|truncate(30) }}
+                        <span class="count">({{ item.count }} times)</span>
+                    </li>
+                {% endfor %}
+            </ul>
+            <a href="{{ url_for('stats_page') }}" class="btn-link">View All Stats →</a>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}{{ movie.title }}{% endblock %}
+
+{% block content %}
+<div class="movie-detail">
+    <div class="movie-header">
+        <h1>{{ movie.title }}</h1>
+        <div class="movie-meta">
+            <span class="year">{{ movie.release_year or 'N/A' }}</span>
+            <span class="rating">⭐ {{ movie.rating or 'N/A' }}</span>
+            <span class="length">⏱ {{ movie.length or 'N/A' }} min</span>
+        </div>
+    </div>
+
+    <div class="movie-content">
+        <div class="movie-info">
+            <div class="info-section">
+                <h3>Description</h3>
+                <p>{{ movie.description or 'No description' }}</p>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-item">
+                    <strong>Rental Duration:</strong> {{ movie.rental_duration or 'N/A' }} days
+                </div>
+                <div class="info-item">
+                    <strong>Rental Rate:</strong> ${{ movie.rental_rate or 'N/A' }}
+                </div>
+                <div class="info-item">
+                    <strong>Replacement Cost:</strong> ${{ movie.replacement_cost or 'N/A' }}
+                </div>
+            </div>
+        </div>
+
+        <div class="movie-actions">
+            <a href="{{ url_for('index') }}" class="btn btn-primary">← Back to Search</a>
+            <button onclick="window.history.back()" class="btn btn-secondary">Back to Results</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

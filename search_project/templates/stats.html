@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Search Statistics{% endblock %}
+
+{% block content %}
+<div class="stats-page">
+    <h2>📊 Search Statistics</h2>
+
+    {% if stats %}
+        <div class="stats-container">
+            <div class="stat-section">
+                <h3>🔥 Most Popular Queries</h3>
+                {% if stats.popular %}
+                    <ul class="stats-list">
+                        {% for item in stats.popular %}
+                        <li class="stat-item">
+                            <div class="stat-header">
+                                <span class="stat-type">{{ item._id.search_type }}</span>
+                                <span class="stat-count">{{ item.count }} times</span>
+                            </div>
+                            <div class="stat-params">
+                                <code>{{ item._id.params|tojson }}</code>
+                            </div>
+                            <div class="stat-time">
+                                Last: {{ item.last_searched.strftime('%Y-%m-%d %H:%M') }}
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="no-data">No search data yet</p>
+                {% endif %}
+            </div>
+
+            <div class="stat-section">
+                <h3>🕐 Recent Queries</h3>
+                {% if stats.recent %}
+                    <ul class="stats-list">
+                        {% for item in stats.recent %}
+                        <li class="stat-item">
+                            <div class="stat-header">
+                                <span class="stat-type">{{ item._id.search_type }}</span>
+                                <span class="stat-time">
+                                    {{ item.last_searched.strftime('%Y-%m-%d %H:%M') }}
+                                </span>
+                            </div>
+                            <div class="stat-params">
+                                <code>{{ item._id.params|tojson }}</code>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="no-data">No recent searches</p>
+                {% endif %}
+            </div>
+        </div>
+    {% else %}
+        <div class="no-data">
+            <h3>No Statistics Available</h3>
+            <p>Start searching to see statistics here!</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
