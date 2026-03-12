@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Search Results{% endblock %}
+
+{% block content %}
+<div class="results-header">
+    <h2>Search Results</h2>
+    <p class="search-description">{{ summary.description }}</p>
+    <p class="results-count">Found {{ summary.total }} results (Page {{ summary.page }})</p>
+</div>
+
+{% if movies %}
+<div class="movies-grid">
+    {% for movie in movies %}
+    <div class="movie-card">
+        <div class="movie-header">
+            <h3>
+                <a href="{{ url_for('movie_detail', film_id=movie.film_id) }}">
+                    {{ movie.title }}
+                </a>
+            </h3>
+            <span class="year">{{ movie.release_year or 'N/A' }}</span>
+        </div>
+
+        <p class="rating">⭐ {{ movie.rating or 'N/A' }}</p>
+
+        {% if movie.description %}
+            <p class="description">{{ movie.description[:150] }}...</p>
+        {% endif %}
+
+        <div class="movie-footer">
+            <a href="{{ url_for('movie_detail', film_id=movie.film_id) }}" class="btn btn-sm">
+                View Details →
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+
+<div class="pagination">
+    {% if summary.has_prev %}
+        {% if summary.type == 'keyword' %}
+            <a href="{{ url_for('search', type='keyword', keyword=keyword, page=summary.page-1) }}" class="btn btn-secondary">← Previous</a>
+        {% else %}
+            <a href="{{ url_for('search', type='genre_year', genre_id=summary.genre_id, start_year=summary.start_year, end_year=summary.end_year, page=summary.page-1) }}" class="btn btn-secondary">← Previous</a>
+        {% endif %}
+    {% endif %}
+
+    <span>Page {{ summary.page }} of {{ ((summary.total + 9) // 10) or 1 }}</span>
+
+    {% if summary.has_next %}
+        {% if summary.type == 'keyword' %}
+            <a href="{{ url_for('search', type='keyword', keyword=keyword, page=summary.page+1) }}" class="btn btn-secondary">Next →</a>
+        {% else %}
+            <a href="{{ url_for('search', type='genre_year', genre_id=summary.genre_id, start_year=summary.start_year, end_year=summary.end_year, page=summary.page+1) }}" class="btn btn-secondary">Next →</a>
+        {% endif %}
+    {% endif %}
+</div>
+{% else %}
+<div class="no-results">
+    <h3>No movies found</h3>
+    <p>Try adjusting your search criteria</p>
+    <a href="{{ url_for('index') }}" class="btn btn-primary">Back to Search</a>
+</div>
+{% endif %}
+{% endblock %}
